@@ -12,8 +12,5 @@ app.post('/users', (req: Request, res: Response) => {
     res.status(201).json(user);
 });
 
-app.listen(3000, () => {
-    console.log('Server is running on port 3000');
-});
 
 export default app;

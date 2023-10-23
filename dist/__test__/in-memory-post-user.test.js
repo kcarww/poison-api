@@ -14,17 +14,15 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const supertest_1 = __importDefault(require("supertest"));
 const in_memory_app_1 = __importDefault(require("./in-memory-app"));
-describe('POST /users', () => {
-    it('should create a new user', () => __awaiter(void 0, void 0, void 0, function* () {
-        const newUser = {
-            login: "testUser",
-            senha: "testPass",
-            categoria: "testCategory"
-        };
-        const response = yield (0, supertest_1.default)(in_memory_app_1.default)
-            .post('/users')
-            .send(newUser);
-        expect(response.status).toBe(201);
-        expect(response.body).toEqual(newUser);
-    }));
-});
+it('should create a new user', () => __awaiter(void 0, void 0, void 0, function* () {
+    const newUser = {
+        login: "testUser",
+        senha: "testPass",
+        categoria: "testCategory"
+    };
+    const response = yield (0, supertest_1.default)(in_memory_app_1.default)
+        .post('/users')
+        .send(newUser);
+    expect(response.status).toBe(201);
+    expect(response.body).toEqual(newUser);
+}));

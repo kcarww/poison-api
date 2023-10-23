@@ -1,7 +1,7 @@
 import request from 'supertest';
 import app from './in-memory-app';
 
-describe('POST /users', () => {
+
     it('should create a new user', async () => {
         const newUser = {
             login: "testUser",
@@ -16,4 +16,4 @@ describe('POST /users', () => {
         expect(response.status).toBe(201);
         expect(response.body).toEqual(newUser);
     });
-});
+

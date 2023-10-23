@@ -12,7 +12,4 @@ app.post('/users', (req, res) => {
     users.push(user);
     res.status(201).json(user);
 });
-app.listen(3000, () => {
-    console.log('Server is running on port 3000');
-});
 exports.default = app;
