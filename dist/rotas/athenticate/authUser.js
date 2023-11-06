@@ -12,7 +12,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.authenticateUser = void 0;
+exports.checkAuthentication = exports.authenticateUser = void 0;
 const usuario_1 = require("../../model/usuario");
 const bcrypt_1 = __importDefault(require("bcrypt"));
 function authenticateUser(req, res) {
@@ -23,13 +23,14 @@ function authenticateUser(req, res) {
                 where: { login }
             });
             if (user) {
-                console.log(`Senha do usuário: ${user.senha}`); // Log seguro agora dentro do condicional
                 bcrypt_1.default.compare(senha, user.senha, (err, result) => {
                     if (err) {
                         return res.status(401).json({ success: false, message: 'Ocorreu um erro ao verificar a senha!' });
                     }
                     if (result) {
                         return res.json({ success: true, message: 'Autenticado' });
+                        req.session.id = user.id.toString();
+                        req.session.save();
                     }
                     return res.status(401).json({ success: false, message: 'Nome de usuário ou senha incorretos!' });
                 });
@@ -40,8 +41,17 @@ function authenticateUser(req, res) {
         }
         catch (error) {
             res.status(500).json({ success: false, message: 'Erro no servidor!', error: error.message });
-            throw error;
         }
     });
 }
 exports.authenticateUser = authenticateUser;
+function checkAuthentication(req, res, next) {
+    console.log(`result === ${req.session.id}`);
+    if (req.session.id != '0') {
+        next();
+    }
+    else {
+        res.status(403).send('Não autorizado');
+    }
+}
+exports.checkAuthentication = checkAuthentication;

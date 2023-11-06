@@ -5,20 +5,46 @@ import { fetchAllUsers } from './rotas/users/fetch-user';
 import { fetchOneUser } from './rotas/users/fetch-one-user';
 import { updateUser } from './rotas/users/update-user';
 import { deleteUser } from './rotas/users/delete-user';
-import { authenticateUser } from './rotas/athenticate/authUser';
+import { authenticateUser, checkAuthentication } from './rotas/athenticate/authUser';
+import session from 'express-session';
+import MySQLStore from 'express-mysql-session';
+import { logout } from './rotas/athenticate/logout';
+
 
 const app = express();
+
+const options = {
+    host: 'localhost',
+    port: 3306,
+    user: 'root',
+    password: '',
+    database: 'poison'
+}
+const MySQLStoreFactory = MySQLStore(session);
+
+const sessionStore = new MySQLStoreFactory(options);
+
+
+app.use(session({
+    name: 'sessioncookie',
+    secret: '123',
+    store: sessionStore,
+    saveUninitialized: false,
+    resave: false,
+    cookie: { maxAge: 1000 * 60 * 60 * 24 } 
+}));
 
 app.use(express.json()); 
 
 
 app.post('/login', authenticateUser)
+app.get('/logout', logout)
 
-app.post('/users', registerUser);
-app.get('/users', fetchAllUsers);
-app.get('/users/:id', fetchOneUser)
-app.put('/users/:id', updateUser);
-app.delete('/users/:id', deleteUser);
+app.post('/users', checkAuthentication ,registerUser);
+app.get('/users', checkAuthentication ,fetchAllUsers);
+app.get('/users/:id', checkAuthentication ,fetchOneUser)
+app.put('/users/:id', checkAuthentication ,updateUser);
+app.delete('/users/:id', checkAuthentication ,deleteUser);
 
 
 app.listen(3000, () => {

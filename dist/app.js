@@ -11,14 +11,35 @@ const fetch_one_user_1 = require("./rotas/users/fetch-one-user");
 const update_user_1 = require("./rotas/users/update-user");
 const delete_user_1 = require("./rotas/users/delete-user");
 const authUser_1 = require("./rotas/athenticate/authUser");
+const express_session_1 = __importDefault(require("express-session"));
+const express_mysql_session_1 = __importDefault(require("express-mysql-session"));
+const logout_1 = require("./rotas/athenticate/logout");
 const app = (0, express_1.default)();
+const options = {
+    host: 'localhost',
+    port: 3306,
+    user: 'root',
+    password: '',
+    database: 'poison'
+};
+const MySQLStoreFactory = (0, express_mysql_session_1.default)(express_session_1.default);
+const sessionStore = new MySQLStoreFactory(options);
+app.use((0, express_session_1.default)({
+    name: 'sessioncookie',
+    secret: '123',
+    store: sessionStore,
+    saveUninitialized: false,
+    resave: false,
+    cookie: { maxAge: 1000 * 60 * 60 * 24 }
+}));
 app.use(express_1.default.json());
 app.post('/login', authUser_1.authenticateUser);
-app.post('/users', register_user_1.registerUser);
-app.get('/users', fetch_user_1.fetchAllUsers);
-app.get('/users/:id', fetch_one_user_1.fetchOneUser);
-app.put('/users/:id', update_user_1.updateUser);
-app.delete('/users/:id', delete_user_1.deleteUser);
+app.get('/logout', logout_1.logout);
+app.post('/users', authUser_1.checkAuthentication, register_user_1.registerUser);
+app.get('/users', authUser_1.checkAuthentication, fetch_user_1.fetchAllUsers);
+app.get('/users/:id', authUser_1.checkAuthentication, fetch_one_user_1.fetchOneUser);
+app.put('/users/:id', authUser_1.checkAuthentication, update_user_1.updateUser);
+app.delete('/users/:id', authUser_1.checkAuthentication, delete_user_1.deleteUser);
 app.listen(3000, () => {
     console.log('Server is running on port 3000');
     conexao_1.sequelize.sync({ alter: true })
