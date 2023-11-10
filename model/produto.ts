@@ -31,7 +31,7 @@ Product.init(
         },
     },
     {
-        tableName: 'users',
+        tableName: 'products',
         sequelize 
     },
 );

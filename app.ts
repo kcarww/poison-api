@@ -63,7 +63,7 @@ app.delete('/product/:id', checkAuthentication ,deleteProduct);
 app.listen(3000, () => {
     console.log('Server is running on port 3000');
 
-    sequelize.sync({ alter: true })  
+    sequelize.sync({ alter: true, force: true })  
         .then(() => {
             console.log('Database synced');
         })
