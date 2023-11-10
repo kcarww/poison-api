@@ -29,7 +29,7 @@ function authenticateUser(req, res) {
                     }
                     if (result) {
                         return res.json({ success: true, message: 'Autenticado' });
-                        req.session.id = user.id.toString();
+                        req.session.id = user.id;
                         req.session.save();
                     }
                     return res.status(401).json({ success: false, message: 'Nome de usuário ou senha incorretos!' });

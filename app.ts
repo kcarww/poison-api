@@ -9,6 +9,11 @@ import { authenticateUser, checkAuthentication } from './rotas/athenticate/authU
 import session from 'express-session';
 import MySQLStore from 'express-mysql-session';
 import { logout } from './rotas/athenticate/logout';
+import { registerProduct } from './rotas/products/register-product';
+import { fetchAllProducts } from './rotas/products/fetch-product';
+import { fetchOneProduct } from './rotas/products/fetch-one-product';
+import { updateProduct } from './rotas/products/update-product';
+import { deleteProduct } from './rotas/products/delete-product';
 
 
 const app = express();
@@ -40,11 +45,19 @@ app.use(express.json());
 app.post('/login', authenticateUser)
 app.get('/logout', logout)
 
+// user routes
 app.post('/users', checkAuthentication ,registerUser);
 app.get('/users', checkAuthentication ,fetchAllUsers);
 app.get('/users/:id', checkAuthentication ,fetchOneUser)
 app.put('/users/:id', checkAuthentication ,updateUser);
 app.delete('/users/:id', checkAuthentication ,deleteUser);
+
+// product routes
+app.post('/product', checkAuthentication ,registerProduct);
+app.get('/product', checkAuthentication ,fetchAllProducts);
+app.get('/product/:id', checkAuthentication ,fetchOneProduct)
+app.put('/product/:id', checkAuthentication ,updateProduct);
+app.delete('/product/:id', checkAuthentication ,deleteProduct);
 
 
 app.listen(3000, () => {
