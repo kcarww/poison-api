@@ -19,7 +19,13 @@ const fetch_product_1 = require("./rotas/products/fetch-product");
 const fetch_one_product_1 = require("./rotas/products/fetch-one-product");
 const update_product_1 = require("./rotas/products/update-product");
 const delete_product_1 = require("./rotas/products/delete-product");
+const cors_1 = __importDefault(require("cors"));
 const app = (0, express_1.default)();
+const corsOptions = {
+    origin: '*',
+    methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
+    allowedHeaders: 'Content-Type, Authorization',
+};
 const options = {
     host: 'localhost',
     port: 3306,
@@ -38,10 +44,11 @@ app.use((0, express_session_1.default)({
     cookie: { maxAge: 1000 * 60 * 60 * 24 }
 }));
 app.use(express_1.default.json());
+app.use((0, cors_1.default)(corsOptions));
 app.post('/login', authUser_1.authenticateUser);
 app.get('/logout', logout_1.logout);
 // user routes
-app.post('/users', authUser_1.checkAuthentication, register_user_1.registerUser);
+app.post('/users', register_user_1.registerUser);
 app.get('/users', authUser_1.checkAuthentication, fetch_user_1.fetchAllUsers);
 app.get('/users/:id', authUser_1.checkAuthentication, fetch_one_user_1.fetchOneUser);
 app.put('/users/:id', authUser_1.checkAuthentication, update_user_1.updateUser);

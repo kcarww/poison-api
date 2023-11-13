@@ -14,9 +14,17 @@ import { fetchAllProducts } from './rotas/products/fetch-product';
 import { fetchOneProduct } from './rotas/products/fetch-one-product';
 import { updateProduct } from './rotas/products/update-product';
 import { deleteProduct } from './rotas/products/delete-product';
+import cors from 'cors';
 
 
 const app = express();
+
+const corsOptions: cors.CorsOptions = {
+    origin: '*',
+    methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
+    allowedHeaders: 'Content-Type, Authorization',
+  };
+
 
 const options = {
     host: 'localhost',
@@ -40,13 +48,13 @@ app.use(session({
 }));
 
 app.use(express.json()); 
-
+app.use(cors(corsOptions));
 
 app.post('/login', authenticateUser)
 app.get('/logout', logout)
 
 // user routes
-app.post('/users', checkAuthentication ,registerUser);
+app.post('/users',  registerUser);
 app.get('/users', checkAuthentication ,fetchAllUsers);
 app.get('/users/:id', checkAuthentication ,fetchOneUser)
 app.put('/users/:id', checkAuthentication ,updateUser);

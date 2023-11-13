@@ -21,7 +21,7 @@ function registerUser(req, res) {
             const { login, senha, categoria } = req.body;
             const hash_password = yield bcrypt_1.default.hash(senha, 10);
             const user = yield usuario_1.User.create({ login, senha: hash_password, categoria });
-            res.json(user);
+            res.status(200).json(user);
         }
         catch (error) {
             if (error instanceof (Error))
